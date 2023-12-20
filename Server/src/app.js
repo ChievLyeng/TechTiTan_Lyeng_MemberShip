@@ -7,7 +7,6 @@ const userRoute = require("./routes/userRoute")
 //app
 const app = express();
 
-
 // for sending cookie to frontend
 const corsConfig = {
     origin: process.env.CLIENT_URL,
@@ -19,10 +18,9 @@ const corsConfig = {
 // middleware
 app.use(cors(corsConfig));
 app.use(express.json());
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }))
 app.use("/api/v1/users", userRoute);
 
 
 module.exports = app;
-
-
