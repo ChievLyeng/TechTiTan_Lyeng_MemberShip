@@ -2,41 +2,32 @@ const User = require("../models/UserModel")
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("../utils/asyncHandler")
 
-const registerUser = async (req,res) => {
-    try {
-        
-        const {userName,email,birthDate,gender} = req.body
+const registerUser = asyncHandler( async (req,res) => {
 
-        const newUser = await User.create({
-            userName,
-            email,
-            birthDate,
-            gender,
-            ...req.body
-        })
+    const {userName,email,birthDate,gender} = req.body
 
-        const token = jwt.sign({ id: newUser._id },process.env.JWT_SECRET,{
-            expiresIn: process.env.JWT_EXPIRES_IN
-        });
+    const newUser = await User.create({
+        userName,
+        email,
+        birthDate,
+        gender,
+        ...req.body
+    })
 
-        res.status(200).json({
-            status: "Success",
-            token,
-            data: {
-                user:newUser,
-            }
-        })
+    const token = jwt.sign({ id: newUser._id },process.env.JWT_SECRET,{
+        expiresIn: process.env.JWT_EXPIRES_IN
+    });
 
-    } catch (error) {
-        res.status(404).json({
-            status: "fail",
-            data: {
-                error
-            }
-        })
-    }
+    res.status(200).json({
+        status: "Success",
+        token,
+        data: {
+            user:newUser,
+        }
+    })
 
-}
+});
+
 
 module.exports = {
     registerUser
