@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const dotenv = require("dotenv");
-const userRoute = require("./routes/userRoute")
+const userRoute = require("./routes/userRoute");
+const AppError = require("./utils/appError")
+const GlobalErrorHandler = require("./middlewares/globalErrorHandler")
 
 //app
 const app = express();
@@ -14,13 +15,20 @@ const corsConfig = {
     credentials: true,
   };
 
-
 // middleware
 app.use(cors(corsConfig));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }))
+app.use(GlobalErrorHandler)
+
+// user route
 app.use("/api/v1/users", userRoute);
+
+// handle wrong route
+app.all("*", (req,res,next) => {
+  next( new AppError(`Can't find ${req.originalUrl} on this server!`,404));
+})
 
 
 module.exports = app;

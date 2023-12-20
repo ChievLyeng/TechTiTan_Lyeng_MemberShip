@@ -1,5 +1,6 @@
 const User = require("../models/UserModel")
 const jwt = require("jsonwebtoken")
+const asyncHandler = require("../utils/asyncHandler")
 
 const registerUser = async (req,res) => {
     try {
