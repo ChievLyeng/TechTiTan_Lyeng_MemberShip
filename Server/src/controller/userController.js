@@ -1,34 +1,25 @@
-const User = require("../models/UserModel")
-const jwt = require("jsonwebtoken")
-const asyncHandler = require("../utils/asyncHandler")
+const User = require("../models/UserModel");
+const AppError = require("../utils/appError");
+const asyncHandler = require("../utils/asyncHandler");
 
-const registerUser = asyncHandler( async (req,res) => {
+const getAlluser = asyncHandler(async (req, res, next) => {
+    const users = await User.find();
+    const result = await User.countDocuments();
 
-    const {userName,email,birthDate,gender} = req.body
-
-    const newUser = await User.create({
-        userName,
-        email,
-        birthDate,
-        gender,
-        ...req.body
-    })
-
-    const token = jwt.sign({ id: newUser._id },process.env.JWT_SECRET,{
-        expiresIn: process.env.JWT_EXPIRES_IN
-    });
+    if(!users){
+        return next( new AppError("User not found!",404));
+    }
 
     res.status(200).json({
         status: "Success",
-        token,
-        data: {
-            user:newUser,
+        result,
+        data:{
+            users
         }
     })
-
 });
 
 
 module.exports = {
-    registerUser
+    getAlluser
 }

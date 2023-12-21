@@ -48,7 +48,7 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const GlobalErrorHandler = (err, req, res, next) => {
+const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
@@ -70,4 +70,4 @@ const GlobalErrorHandler = (err, req, res, next) => {
   }
 };
 
-module.exports = GlobalErrorHandler;
+module.exports = globalErrorHandler;

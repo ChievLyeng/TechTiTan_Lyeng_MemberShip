@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         require: [true, "Password is require."],
-        validate: [validator.isStrongPassword, "Password must contain character, number and symbol."]
+        validate: [validator.isStrongPassword, "Password must contain character, number and symbol."],
     },
     confirmPassword: {
         type: String,
@@ -110,6 +110,11 @@ userSchema.pre('save', async function(next) {
     this.confirmPassword = undefined;
     next();
 });
+
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
+
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
