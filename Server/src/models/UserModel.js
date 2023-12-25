@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true,
         require: [true, "email is require"],
-        validate: [validator.isEmail, 'Please provide a valid email']
+        validate: [validator.isEmail, 'Please provide a valid email'],
+        trim : true
     },
     birthDate: {
         type: Date,
@@ -56,6 +57,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: [true, "Password is require."],
         validate: [validator.isStrongPassword, "Password must contain character, number and symbol."],
+        select: false
     },
     confirmPassword: {
         type: String,
@@ -98,22 +100,23 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function(next) {
-    // only run if password modified
-    if(!this.isModified('password')){
-        return next()
-    }
-    
-    // hash password with cost of 12
+    // Only run this function if password was actually modified
+    if (!this.isModified('password')) return next();
+  
+    // Hash the password with cost of 12
     this.password = await bcrypt.hash(this.password, 12);
-
-    // delete confirmpassword when compared
-    this.confirmPassword = undefined;
+  
+    // Delete passwordConfirm field
+    this.passwordConfirm = undefined;
     next();
-});
+  });
 
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+userSchema.methods.correctPassword = async function(
+    candidatePassword,
+    userPassword
+  ) {
     return await bcrypt.compare(candidatePassword, userPassword);
-};
+  };
 
 
 const User = mongoose.model("User", userSchema);
