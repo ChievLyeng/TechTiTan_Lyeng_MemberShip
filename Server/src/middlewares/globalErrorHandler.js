@@ -48,10 +48,6 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleJWTError = (err) => {
-  return new AppError("Invalid token. Pleasw Log In again!",401);
-}
-
 const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
@@ -69,10 +65,6 @@ const globalErrorHandler = (err, req, res, next) => {
 
     if (err.name === "ValidationError") {
       err = handleValidationErrorDB(err);
-    }
-
-    if(err.name === 'JsonWebTokenError'){
-      err = handleJWTError(err);
     }
     return productionError(err, res);
   }
