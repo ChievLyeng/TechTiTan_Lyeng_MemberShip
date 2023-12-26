@@ -1,22 +1,30 @@
-const express = require("express");
+const express = require('express')
 const {
-  registerUser,
-  Login,
-  requireSignIn,
-  restrictTo,
-  forgetPassword,
-  resetPassword,
-} = require("../controller/authController");
-const { getAlluser } = require("../controller/userController");
-const router = express.Router();
+    registerUser,
+    Login,
+    requireSignIn,
+    restrictTo,
+    forgetPassword,
+    resetPassword,
+    updatePassword,
+} = require('../controller/authController')
+const {
+    getAlluser,
+    updateMe,
+    deleteMe,
+} = require('../controller/userController')
+const router = express.Router()
 
 //auth route
-router.post("/register", registerUser);
-router.post("/login", Login);
-router.post("/forgotPassword", forgetPassword);
-router.post("/resetPassword", resetPassword);
+router.post('/register', registerUser)
+router.post('/login', Login)
+router.post('/forgotPassword', forgetPassword)
+router.patch('/resetPassword/:token', resetPassword)
+router.patch('/updateMyPassword', requireSignIn, updatePassword)
+router.patch('/updateMe', requireSignIn, updateMe)
+router.delete('/deleteMe', requireSignIn, deleteMe)
 
 // user route
-router.route("/").get(requireSignIn, restrictTo("admin", "user"), getAlluser);
+router.route('/').get(requireSignIn, restrictTo('admin', 'user'), getAlluser)
 
-module.exports = router;
+module.exports = router
