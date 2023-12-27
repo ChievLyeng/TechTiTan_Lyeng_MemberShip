@@ -25,11 +25,13 @@ const sendToken = (user, statusCode, res) => {
 }
 
 const registerUser = asyncHandler(async (req, res) => {
+    const { username, email, password, passwordConfirm } = req.body
+    console.log(username, email, password, passwordConfirm)
     const newUser = await User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
+        username,
+        email,
+        password,
+        passwordConfirm,
         ...req.body,
     })
 
@@ -195,7 +197,6 @@ const updatePassword = asyncHandler(async (req, res, next) => {
     // const { id } = req.params.id
     // 1. get user from collection
     const user = await User.findById(req.user.id).select('+password')
-    
 
     // 2. Check if posted current password is correct
     if (

@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
         },
         birthDate: {
             type: Date,
-            required: [true, 'Birthdate is required.'],
+            // required: [true, 'Birthdate is required.'],
         },
         gender: {
             type: String,
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
                 values: ['Male', 'Female', 'Other'],
                 message: 'Gender can only have Male, Female, Other',
             },
-            required: [true, 'Gender is required.'],
+            // required: [true, 'Gender is required.'],
         },
         phoneNumber: {
             type: Number,
@@ -179,6 +179,8 @@ userSchema.methods.createPasswordResetToken = function () {
 userSchema.pre(/^find/, function (next) {
     // this point to current query
     this.find({ active: { $ne: false } })
+
+    next();
 })
 
 const User = mongoose.model('User', userSchema)

@@ -1,13 +1,13 @@
-const dotenve = require("dotenv")
-const app = require("./app")
-const connectDB = require("./config/DB")
-require("dotenv").config();
+const dotenve = require('dotenv')
+const app = require('./app')
+const connectDB = require('./config/DB')
+require('dotenv').config()
 
 // connect DB
-connectDB();
+connectDB()
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}!!!`);
-});
+    console.log(`Listening on port ${PORT}!!!`)
+})

@@ -25,6 +25,6 @@ router.patch('/updateMe', requireSignIn, updateMe)
 router.delete('/deleteMe', requireSignIn, deleteMe)
 
 // user route
-router.route('/').get(requireSignIn, restrictTo('admin', 'user'), getAlluser)
+router.route('/').get(requireSignIn,getAlluser)
 
 module.exports = router
