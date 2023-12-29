@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
+  const navigate = useNavigate()
   const PORT = 3000;
 
   const signup = async (username, email, password, passwordConfirm) => {
@@ -19,8 +21,9 @@ export const useSignup = () => {
 
       if (response) {
         // Request was successful
-        localStorage.setItem("user", JSON.stringify(response.data));
-        dispatch({ type: "LOGIN", payload: response.data });
+        // localStorage.setItem("user", JSON.stringify(response.data));
+        // dispatch({ type: "LOGIN", payload: response.data });
+        navigate('/checkemail')
       }
     } catch (err) {
       // Handle network or other errors;
@@ -29,5 +32,6 @@ export const useSignup = () => {
     }
   };
 
-  return { signup, isLoading, error };
+  return { signup, isLoading, error };   
+
 };

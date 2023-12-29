@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const asyncHandler = require('../utils/asyncHandler')
 const AppError = require('../utils/appError')
 const sendEmail = require('../utils/email')
+const Token = require('../models/token')
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -27,15 +28,82 @@ const sendToken = (user, statusCode, res) => {
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, passwordConfirm } = req.body
     console.log(username, email, password, passwordConfirm)
+    console.log(req.body)
     const newUser = await User.create({
-        username,
+        userName: username,
         email,
         password,
         passwordConfirm,
         ...req.body,
     })
 
-    sendToken(newUser, 201, res)
+    const token = await new Token({
+        userId: newUser._id,
+        token: crypto.randomBytes(32).toString('hex'),
+    }).save()
+
+    const url = `${process.env.BASE_URL}/api/v1/users/${newUser._id}/verify/${token.token}`
+    console.log(url, token.token)
+
+    await sendEmail({
+        email: newUser.email,
+        subject: 'Please verify your email.',
+        url,
+    })
+    // sendToken(newUser, 201, res)
+
+    res.status(201).json({
+        status: 'succes',
+        message:
+            'An email has been sent to your account. Please verify your email before logging in.',
+        data: {
+            newUser,
+        },
+    })
+})
+
+const verifyEmail = asyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ _id: req.params.id })
+
+    if (!user) {
+        return next(new AppError('Invalid Link!!!', 400))
+    }
+
+    const token = await Token.findOne({
+        userId: user._id,
+        token: req.params.token,
+    })
+
+    if (!token) {
+        return next(new AppError('Invalid Link!!!', 400))
+    }
+
+    // await User.updateOne({
+    //     _id:user._id,
+    //     verified:true
+    // })
+
+    // Update user's verified status
+    const updateUser = await User.updateOne(
+        { _id: user._id },
+        { verified: true }
+    )
+
+    if (!updateUser) {
+        return next(new AppError('Internal Server Error', 500))
+    }
+
+    if(updateUser){
+        res.redirect(`http://localhost:5173/users/${req.params.id}/verify/${req.params.token}`)
+    }
+
+    // delete token after verify
+    await Token.findOneAndDelete({userId:user._id})
+
+    res.status(200).json({
+        status: 'success',
+        message: "User's email verify successfully.",
+    })
 })
 
 const Login = asyncHandler(async (req, res, next) => {
@@ -222,4 +290,5 @@ module.exports = {
     forgetPassword,
     resetPassword,
     updatePassword,
+    verifyEmail,
 }

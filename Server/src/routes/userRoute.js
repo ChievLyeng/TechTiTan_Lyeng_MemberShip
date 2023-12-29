@@ -7,6 +7,7 @@ const {
     forgetPassword,
     resetPassword,
     updatePassword,
+    verifyEmail
 } = require('../controller/authController')
 const {
     getAlluser,
@@ -23,8 +24,10 @@ router.patch('/resetPassword/:token', resetPassword)
 router.patch('/updateMyPassword', requireSignIn, updatePassword)
 router.patch('/updateMe', requireSignIn, updateMe)
 router.delete('/deleteMe', requireSignIn, deleteMe)
+router.get('/:id/verify/:token',verifyEmail)
 
 // user route
 router.route('/').get(requireSignIn,getAlluser)
+
 
 module.exports = router
