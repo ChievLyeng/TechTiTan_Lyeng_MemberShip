@@ -4,10 +4,10 @@ const {
     Login,
     requireSignIn,
     restrictTo,
-    forgetPassword,
+    forgotPassword,
     resetPassword,
     updatePassword,
-    verifyEmail
+    verifyEmail,
 } = require('../controller/authController')
 const {
     getAlluser,
@@ -19,15 +19,14 @@ const router = express.Router()
 //auth route
 router.post('/register', registerUser)
 router.post('/login', Login)
-router.post('/forgotPassword', forgetPassword)
+router.post('/forgotPassword', forgotPassword)
 router.patch('/resetPassword/:token', resetPassword)
 router.patch('/updateMyPassword', requireSignIn, updatePassword)
 router.patch('/updateMe', requireSignIn, updateMe)
 router.delete('/deleteMe', requireSignIn, deleteMe)
-router.get('/:id/verify/:token',verifyEmail)
+router.get('/:id/verify/:token', verifyEmail)
 
 // user route
-router.route('/').get(requireSignIn,getAlluser)
-
+router.route('/').get(requireSignIn, getAlluser)
 
 module.exports = router

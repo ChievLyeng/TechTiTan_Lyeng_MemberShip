@@ -43,11 +43,13 @@ const registerUser = asyncHandler(async (req, res) => {
     }).save()
 
     const url = `${process.env.BASE_URL}/api/v1/users/${newUser._id}/verify/${token.token}`
-    console.log(url, token.token)
+    const message = `We're happy you signed up for our application. Pleas use this link
+     ${url} or click the button to verify your account.`
 
     await sendEmail({
         email: newUser.email,
         subject: 'Please verify your email.',
+        message,
         url,
     })
     // sendToken(newUser, 201, res)
@@ -93,12 +95,14 @@ const verifyEmail = asyncHandler(async (req, res, next) => {
         return next(new AppError('Internal Server Error', 500))
     }
 
-    if(updateUser){
-        res.redirect(`http://localhost:5173/users/${req.params.id}/verify/${req.params.token}`)
+    if (updateUser) {
+        res.redirect(
+            `http://localhost:5173/users/${req.params.id}/verify/${req.params.token}`
+        )
     }
 
     // delete token after verify
-    await Token.findOneAndDelete({userId:user._id})
+    await Token.findOneAndDelete({ userId: user._id })
 
     res.status(200).json({
         status: 'success',
@@ -185,7 +189,7 @@ const restrictTo = (...roles) => {
     }
 }
 
-const forgetPassword = asyncHandler(async (req, res, next) => {
+const forgotPassword = asyncHandler(async (req, res, next) => {
     // 1. get user based on posted email
     const user = await User.findOne({ email: req.body.email })
     if (!user) {
@@ -197,9 +201,7 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
     // 3. send it to user's email
-    const resetURL = `${req.protocol} ://${req.get(
-        'host'
-    )}/api/v1/users/resetPassword/${resetToken}`
+    const resetURL = `${process.env.CLIENT_URL}/resetpassword/${resetToken}`
 
     const message = `Forgot your passowrd? Submit a reset request with your new password and 
     passwordConfirm to: ${resetURL}. \n If you didn't forget your passowrd,
@@ -208,8 +210,9 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
     try {
         await sendEmail({
             email: user.email,
-            subject: 'Your password reset token (valid for 10 minutes).',
+            subject: 'Forgot Password Verify Token',
             message,
+            url: resetURL,
         })
 
         res.status(200).json({
@@ -287,7 +290,7 @@ module.exports = {
     Login,
     requireSignIn,
     restrictTo,
-    forgetPassword,
+    forgotPassword,
     resetPassword,
     updatePassword,
     verifyEmail,
