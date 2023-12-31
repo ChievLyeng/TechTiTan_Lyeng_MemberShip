@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const userRoute = require("./routes/userRoute");
-const AppError = require("./utils/appError")
-const globalErrorHandler = require("./middlewares/globalErrorHandler")
+const userRoute = require("./src/routes/userRoute");
+const AppError = require("./src/utils/appError")
+const globalErrorHandler = require("./src/middlewares/globalErrorHandler")
 const dotenv = require("dotenv");
 dotenv.config({path: "./example.env"})
 require("dotenv").config();
