@@ -6,13 +6,16 @@ import axios from "axios";
 export const useForgotPassword = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [succes, setSuccess] = useState(false);
   const { navigate } = useNavigate();
   //   const { dispatch } = useAuthContext();
   const PORT = 3000;
 
   const forgotpassword = async (email) => {
+    // initail state
     setIsLoading(true);
     setError(null);
+    setSuccess(false);
 
     try {
       const url = `http://localhost:${PORT}/api/v1/users/forgotpassword`;
@@ -25,7 +28,9 @@ export const useForgotPassword = () => {
 
       if (response.status === 200) {
         console.log(response.status);
-        navigate("/login");
+        console.log("succes");
+        setIsLoading(false);
+        setSuccess(true);
       }
     } catch (err) {
       // Handle network or other errors;
@@ -34,5 +39,5 @@ export const useForgotPassword = () => {
     }
   };
 
-  return { forgotpassword, isLoading, error };
+  return { forgotpassword, isLoading, succes, error };
 };

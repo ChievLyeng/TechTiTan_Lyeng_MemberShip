@@ -48,7 +48,7 @@ const ResetPassword = () => {
     e.preventDefault()
     await resetpassword(password, passwordConfirm, token);
   };
-  console.log(error)
+
 
   return (
     <>
