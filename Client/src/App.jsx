@@ -4,16 +4,17 @@ import SignUp from "../pages/Signup";
 import LogIn from "../pages/Login";
 import Homepage from "../pages/Homepage";
 import TopAppBar from "../components/TopAppBar";
-import ForgotPassword from "../pages/Forgetpassword";
+import ForgotPassword from "../pages/Forgotpassword";
 import EmailVerify from "../pages/EmailVerify";
 import CheckEmail from "../pages/CheckEmail";
+import ResetPassword from "../pages/ResetPassword";
 
 function App() {
   const { user } = useAuthContext();
 
   return (
     <BrowserRouter>
-      {/* <TopAppBar /> */}
+      <TopAppBar />
       <Routes>
         <Route
           path="/"
@@ -24,6 +25,8 @@ function App() {
         <Route path="/checkemail" element={<CheckEmail /> } />
         <Route path="/users/:id/verify/:token" element={<EmailVerify /> } />
         <Route path="/forgotpassword" element={!user ? <ForgotPassword />: <Navigate to="/signup" />} />
+        {/* <Route path="/resetpassword/:token" element={!user ? <ResetPassword />: <Navigate to="/signup" />} /> */}
+        <Route path="/resetpassword/:token" element={ <ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

@@ -3,29 +3,30 @@ import { useAuthContext } from "./useAuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const useForgotPassword = () => {
+export const useResetPassword = () => {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(null);
   const { navigate } = useNavigate();
   //   const { dispatch } = useAuthContext();
   const PORT = 3000;
 
-  const forgotpassword = async (email) => {
+  const resetpassword = async (password,passwordConfirm,token) => {
     setIsLoading(true);
     setError(null);
+   
 
     try {
-      const url = `http://localhost:${PORT}/api/v1/users/forgotpassword`;
+      const url = `http://localhost:${PORT}/api/v1/users/resetPassword/${token}`;
+      console.log('url',url)
 
-      const response = await axios.post(
+      const response = await axios.patch(
         url,
-        { email },
+        { password,passwordConfirm },
         { withCredentials: true }
       );
 
-      if (response.status === 200) {
-        console.log(response.status);
-        navigate("/login");
+      if (response) {
+        navigate('/checkemail')
       }
     } catch (err) {
       // Handle network or other errors;
@@ -34,5 +35,5 @@ export const useForgotPassword = () => {
     }
   };
 
-  return { forgotpassword, isLoading, error };
+  return { resetpassword, isLoading, error };
 };
