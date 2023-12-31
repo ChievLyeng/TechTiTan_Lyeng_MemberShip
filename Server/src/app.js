@@ -4,6 +4,9 @@ const morgan = require("morgan");
 const userRoute = require("./routes/userRoute");
 const AppError = require("./utils/appError")
 const globalErrorHandler = require("./middlewares/globalErrorHandler")
+const dotenv = require("dotenv");
+dotenv.config({path: "./example.env"})
+require("dotenv").config();
 
 //app
 const app = express();
@@ -20,6 +23,7 @@ app.use(cors(corsConfig));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }))
+
 
 // user route
 app.use("/api/v1/users", userRoute);
