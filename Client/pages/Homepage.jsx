@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import Layout from "../components/Layout";
 
 function Copyright(props) {
   return (
@@ -140,7 +141,8 @@ const Homepage = () => {
 
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <Layout>
+      <ThemeProvider theme={defaultTheme}>
       <GlobalStyles
         styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
       />
@@ -275,6 +277,7 @@ const Homepage = () => {
       </Container>
       {/* End footer */}
     </ThemeProvider>
+    </Layout>
   );
 };
 
