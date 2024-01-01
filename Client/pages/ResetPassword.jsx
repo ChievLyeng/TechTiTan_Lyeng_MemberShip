@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -9,9 +9,16 @@ import {
   OutlinedInput,
   IconButton,
   FormHelperText,
+  Container,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useResetPassword } from "../hooks/useResetPassword";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -19,11 +26,11 @@ const ResetPassword = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [shownewPassword, setShowNewPassword] = useState(false);
   const [showconPassword, setShowConPassword] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const { resetpassword, isLoading, error } = useResetPassword();
+  const { resetpassword, isLoading, succes, error } = useResetPassword();
   const navigate = useNavigate();
   const { token } = useParams();
-  
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
 
@@ -38,136 +45,192 @@ const ResetPassword = () => {
   };
 
   const handleInputChange = () => {
-    
     setIsTyping(true);
     setErrorMessage(""); // Clear the error message
   };
-  
 
   const handleResetpasword = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     await resetpassword(password, passwordConfirm, token);
   };
 
+  useEffect(() => {
+    console.log(succes);
+    if (succes) {
+      // Show the success alert
+      setShowSuccessAlert(true);
 
+      // Automatically hide the success alert after 5 seconds (adjust as needed)
+      const timer = setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 5000);
+
+      // Clear the timer when the component unmounts or when the alert is closed
+      return () => clearTimeout(timer);
+    }
+  }, [succes]);
   return (
     <>
-      <Typography
-        variant="h4"
-        className="title"
-        sx={{ margin: "24px", textAlign: "center" }}
-      >
-        Reset Password
-      </Typography>
+      <Container>
+        <Card sx={{ minWidth: 275, marginTop: "60px" }}>
+          <CardContent>
+            <Box sx={{ maxWidth: "400px", margin: "auto" }}>
+              <Typography
+                // variant="h4"
+                // className="title"
+                // sx={{ margin: "24px", textAlign: "center" }}
+                variant="h4"
+                className="title"
+                sx={{ fontWeight: "bold", marginBottom: "8px" }}
+              >
+                Reset Password
+              </Typography>
 
-      <form onSubmit={handleResetpasword}>
-        {/* {errorMessage && !isTyping && (
-          <Typography color="error" sx={{ marginBottom: "16px" }}>
-            {errorMessage}
-          </Typography>
-        )} */}
-        <FormControl
-          fullWidth
-          variant="outlined"
-          sx={{
-            margin: "24px 0",
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
-                // borderColor: "#82B440",
-              },
-            "& .MuiInputLabel-root.Mui-focused": {
-              //   color: "#82B440",
-            },
-          }}
-        >
-          <InputLabel htmlFor="outlined-adornment-password">
-            New Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={shownewPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowNewPassword}
-                  onMouseDown={handleMouseDownNewPassword}
-                  edge="end"
+              <Typography
+                className="title"
+                color="text.secondary"
+                sx={{ textAlign: "left", paddingBottom: "24px" }}
+              >
+                Strong passwords include numbers, letters, and punctuation
+                marks.
+              </Typography>
+
+              <form onSubmit={handleResetpasword}>
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    margin: "24px 0",
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        // borderColor: "#82B440",
+                      },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      //   color: "#82B440",
+                    },
+                  }}
                 >
-                  {shownewPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="New Password"
-            value={password}
-            onChange={(e) => {
-              handleInputChange();
-              setPassword(e.target.value);
-            }}
-          />
-          <FormHelperText id="outlined-adornment-password-helper-text">
-            *Required
-          </FormHelperText>
-        </FormControl>
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    New Password
+                  </InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password"
+                    type={shownewPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowNewPassword}
+                          onMouseDown={handleMouseDownNewPassword}
+                          edge="end"
+                        >
+                          {shownewPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="New Password"
+                    value={password}
+                    onChange={(e) => {
+                      handleInputChange();
+                      setPassword(e.target.value);
+                    }}
+                  />
+                  <FormHelperText id="outlined-adornment-password-helper-text">
+                    *Required
+                  </FormHelperText>
+                </FormControl>
 
-        <FormControl
-          fullWidth
-          variant="outlined"
-          sx={{
-            margin: " 0",
-            "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
-                // borderColor: "black",
-              },
-            "& .MuiInputLabel-root.Mui-focused": {
-              //   color: "#82B440",
-            },
-          }}
-        >
-          <InputLabel htmlFor="outlined-adornment-confirm-password">
-            Confirm Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-confirm-password"
-            type={showconPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowConPassword}
-                  onMouseDown={handleMouseDownConPassword}
-                  edge="end"
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    margin: " 0",
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                      {
+                        // borderColor: "black",
+                      },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      //   color: "#82B440",
+                    },
+                  }}
                 >
-                  {showconPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Confirm Password"
-            value={passwordConfirm}
-            onChange={(e) => {
-              handleInputChange();
-              setPasswordConfirm(e.target.value);
-            }}
-          />
-          <FormHelperText id="outlined-adornment-confirm-password-helper-text">
-            *Required
-          </FormHelperText>
-        </FormControl>
+                  <InputLabel htmlFor="outlined-adornment-confirm-password">
+                    Confirm Password
+                  </InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-confirm-password"
+                    type={showconPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConPassword}
+                          onMouseDown={handleMouseDownConPassword}
+                          edge="end"
+                        >
+                          {showconPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Confirm Password"
+                    value={passwordConfirm}
+                    onChange={(e) => {
+                      handleInputChange();
+                      setPasswordConfirm(e.target.value);
+                    }}
+                  />
+                  <FormHelperText id="outlined-adornment-confirm-password-helper-text">
+                    *Required
+                  </FormHelperText>
+                </FormControl>
 
-        <Button
-          sx={{
-            marginTop: "24px",
-            // backgroundColor: "#82B440",
-          }}
-          fullWidth
-          type="submit"
-          variant="contained"
-          className="mt-2"
-          //   disabled={isLoading}
-        >
-          Reset Password
-        </Button>
-      </form>
+                {/* <Button
+                  sx={{
+                    marginTop: "24px",
+                    // backgroundColor: "#82B440",
+                  }}
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  className="mt-2"
+                  //   disabled={isLoading}
+                >
+                  Reset Password
+                </Button> */}
+
+                <LoadingButton
+                  onClick={handleResetpasword}
+                  loading={isLoading}
+                  loadingIndicator="Loading…"
+                  size="large"
+                  variant="contained"
+                  fullWidth
+                  sx={{ margin: "24px 0" }}
+                >
+                  <span>Reset password</span>
+                </LoadingButton>
+
+                <Link to="/login">
+                  <Button variant="text" fullWidth>
+                    Back to login
+                  </Button>
+                </Link>
+
+                {showSuccessAlert && (
+                  <Alert
+                    severity="success"
+                    onClose={() => setShowSuccessAlert(false)}
+                  >
+                    <AlertTitle>Success</AlertTitle>
+                    Your password has been updated.
+                    <strong>you can login now!</strong>
+                  </Alert>
+                )}
+              </form>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
     </>
   );
 };

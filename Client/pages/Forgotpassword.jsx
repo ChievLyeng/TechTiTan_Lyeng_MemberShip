@@ -85,8 +85,8 @@ const ForgotPassword = () => {
             </Link>
 
             {showSuccessAlert && (
-              <Alert severity="info" onClose={() => setShowSuccessAlert(false)}>
-                <AlertTitle>Info</AlertTitle>
+              <Alert severity="success" onClose={() => setShowSuccessAlert(false)}>
+                <AlertTitle>Success</AlertTitle>
                 Reset Link is sent to your email. Please check your email. — <strong>check it out!</strong>
               </Alert>
             )}
