@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
@@ -18,7 +20,7 @@ import {
   IconButton,
   FormHelperText,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Book, Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Copyright(props) {
   return (
@@ -49,13 +51,14 @@ const SignUp = () => {
   const [username, setUserName] = useState("");
   const [shownewPassword, setShowNewPassword] = useState(false);
   const [showconPassword, setShowConPassword] = useState(false);
-  const { signup, error, isLoading } = useSignup();
+  const { signup, error, isLoading, singleError } = useSignup();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await signup(username, email, password, passwordConfirm);
     console.log(username, email, password, passwordConfirm);
-    console.log("sign Error", error);
+    console.log("Error", error);
+    console.log("single Error", singleError);
   };
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
@@ -103,6 +106,7 @@ const SignUp = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12}>
                 <TextField
+                  error={Boolean(error && !username)}
                   autoComplete="given-name"
                   name="userName"
                   required
@@ -112,9 +116,16 @@ const SignUp = () => {
                   autoFocus
                   onChange={(e) => setUserName(e.target.value)}
                 />
+                {singleError?.username && (
+                  <Alert severity="error" sx={{ marginTop: "8px" }}>
+                    {" "}
+                    {singleError?.username?.message}{" "}
+                  </Alert>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={Boolean(singleError?.email && !email)}
                   required
                   fullWidth
                   id="email"
@@ -123,6 +134,18 @@ const SignUp = () => {
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {singleError?.email && (
+                  <Alert severity="error" sx={{ marginTop: "8px" }}>
+                    {" "}
+                    {singleError?.email?.message}{" "}
+                  </Alert>
+                )}
+
+                {error?.error?.code === 11000 && (
+                  <Alert severity="error" sx={{ marginTop: "8px" }}>
+                    Your email is already in use. Please use another one.
+                  </Alert>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <FormControl
@@ -139,9 +162,10 @@ const SignUp = () => {
                   }}
                 >
                   <InputLabel htmlFor="outlined-adornment-password">
-                    New Password
+                    Password
                   </InputLabel>
                   <OutlinedInput
+                    // error={singleError?.password}
                     id="outlined-adornment-password"
                     type={shownewPassword ? "text" : "password"}
                     endAdornment={
@@ -156,7 +180,7 @@ const SignUp = () => {
                         </IconButton>
                       </InputAdornment>
                     }
-                    label="New Password"
+                    label="Password"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -165,6 +189,18 @@ const SignUp = () => {
                   <FormHelperText id="outlined-adornment-password-helper-text">
                     *Required
                   </FormHelperText>
+                  {/* {singleError?.password?.message && (
+                    <Alert severity="error">
+                      {" "}
+                      {singleError?.password?.message}{" "}
+                    </Alert>
+                  )} */}
+                  {singleError?.password && (
+                    <Alert severity="error" sx={{ marginTop: "8px" }}>
+                      {" "}
+                      {singleError.password?.message}{" "}
+                    </Alert>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
@@ -185,6 +221,7 @@ const SignUp = () => {
                     Confirm Password
                   </InputLabel>
                   <OutlinedInput
+                    // error={singleError?.passwordConfirm}
                     id="outlined-adornment-confirm-password"
                     type={showconPassword ? "text" : "password"}
                     endAdornment={
@@ -208,6 +245,12 @@ const SignUp = () => {
                   <FormHelperText id="outlined-adornment-confirm-password-helper-text">
                     *Required
                   </FormHelperText>
+                  {singleError?.passwordConfirm?.message && (
+                    <Alert severity="error" sx={{ marginTop: "8px" }}>
+                      {" "}
+                      {singleError?.passwordConfirm?.message}{" "}
+                    </Alert>
+                  )}
                 </FormControl>
               </Grid>
             </Grid>

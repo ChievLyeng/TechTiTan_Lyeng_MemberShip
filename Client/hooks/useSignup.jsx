@@ -5,33 +5,40 @@ import axios from "axios";
 
 export const useSignup = () => {
   const [error, setError] = useState(null);
+  const [singleError, setSingleError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const PORT = 3000;
 
   const signup = async (username, email, password, passwordConfirm) => {
     setIsLoading(true);
     setError(null);
+    setSingleError(null);
 
     try {
       const url = `http://localhost:${PORT}/api/v1/users/register`;
 
-      const response = await axios.post(url, { username, email, password, passwordConfirm }, { withCredentials: true });
+      const response = await axios.post(
+        url,
+        { username, email, password, passwordConfirm },
+        { withCredentials: true }
+      );
 
       if (response) {
         // Request was successful
         // localStorage.setItem("user", JSON.stringify(response.data));
         // dispatch({ type: "LOGIN", payload: response.data });
-        navigate('/checkemail')
+        navigate("/checkemail");
       }
     } catch (err) {
       // Handle network or other errors;
       setIsLoading(false);
-      setError(err.response ? err.response.data : "An error occurred"); // Set the error state with response data or a generic message
+      setError(err.response.data || { error: "Unknow error" }); // Set the error state with response data or a generic message
+      setSingleError(err.response.data.error.errors)
+      // console.log("sign up", err.response.data);
     }
   };
 
-  return { signup, isLoading, error };   
-
+  return { signup, isLoading, error,singleError };
 };

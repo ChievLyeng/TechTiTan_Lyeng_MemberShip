@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,11 +7,14 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useLogin } from "../hooks/useLogin";
+
 import {
   FormControl,
   InputLabel,
@@ -66,6 +68,7 @@ const LogIn = () => {
 
     await login(email, password);
     console.log(email, password);
+    console.log(error)
   };
 
   return (
@@ -83,8 +86,8 @@ const LogIn = () => {
           <Avatar
             sx={{
               m: 1,
-              width: "100px",
-              height: "100px",
+              width: "80px",
+              height: "80px",
               bgcolor: "primary.main",
             }}
           ></Avatar>
@@ -151,19 +154,30 @@ const LogIn = () => {
                 *Required
               </FormHelperText>
             </FormControl>
+            {error && (
+              <Alert severity="error">
+                <AlertTitle>Log In Fail</AlertTitle>
+                {error.message} — <strong>Please try again</strong>
+              </Alert>
+            )}
 
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
+
+            <LoadingButton
+              sx={{ mt: 3, mb: 2 }}
+              loading={isLoading}
+              variant="contained"
               type="submit"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
-            </Button>
+              <span>Log In</span>
+            </LoadingButton>
+
+            
+
             <Grid container>
               <Grid item xs>
                 <Link href="/forgotpassword" variant="body2">
