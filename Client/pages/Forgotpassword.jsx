@@ -21,7 +21,6 @@ const ForgotPassword = () => {
   };
 
   useEffect(() => {
-    console.log(succes)
     if (succes) {
       // Show the success alert
       setShowSuccessAlert(true);
@@ -58,14 +57,34 @@ const ForgotPassword = () => {
 
             <TextField
               fullWidth
+              error={error && !email}
               label="Email address"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              helperText="Enter your email address"
               margin="normal"
+              // helperText={!email ? "Please enter your email" : null}
               variant="outlined"
             />
+
+            {error && (
+              <Alert severity="error" sx={{ marginTop: "8px" }}>
+                {" "}
+                {error?.message}{" "}
+              </Alert>
+            )}
+
+            {showSuccessAlert && (
+              <Alert
+                sx={{ marginTop: "16px" }}
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+              >
+                <AlertTitle>Success</AlertTitle>
+                Reset Link is sent to your email. Please check your email. —{" "}
+                <strong>check it out!</strong>
+              </Alert>
+            )}
 
             <LoadingButton
               onClick={handleForgotPassword}
@@ -83,13 +102,6 @@ const ForgotPassword = () => {
                 Back to login
               </Button>
             </Link>
-
-            {showSuccessAlert && (
-              <Alert severity="success" onClose={() => setShowSuccessAlert(false)}>
-                <AlertTitle>Success</AlertTitle>
-                Reset Link is sent to your email. Please check your email. — <strong>check it out!</strong>
-              </Alert>
-            )}
           </Box>
         </CardContent>
       </Card>

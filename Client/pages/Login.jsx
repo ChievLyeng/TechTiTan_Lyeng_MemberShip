@@ -58,17 +58,10 @@ const LogIn = () => {
     event.preventDefault();
   };
 
-  // const handleInputChange = () => {
-  //   setIsTyping(true);
-  //   setErrorMessage(""); // Clear the error message
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await login(email, password);
-    console.log(email, password);
-    console.log(error)
   };
 
   return (
@@ -92,7 +85,6 @@ const LogIn = () => {
             }}
           ></Avatar>
 
-          {/* <AccountCircleOutlinedIcon sx={{width:'100px',height}} /> */}
           <Typography component="h1" variant="h5">
             Log In
           </Typography>
@@ -103,6 +95,7 @@ const LogIn = () => {
             sx={{ mt: 1 }}
           >
             <TextField
+              error={error && !email}
               margin="normal"
               required
               fullWidth
@@ -115,6 +108,7 @@ const LogIn = () => {
             />
 
             <FormControl
+              error={error && !password}
               fullWidth
               variant="outlined"
               sx={{
@@ -129,7 +123,7 @@ const LogIn = () => {
               }}
             >
               <InputLabel htmlFor="outlined-adornment-password">
-                New Password
+                Password
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
@@ -146,12 +140,12 @@ const LogIn = () => {
                     </IconButton>
                   </InputAdornment>
                 }
-                label="New Password"
+                label="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <FormHelperText id="outlined-adornment-password-helper-text">
-                *Required
+                {error && !password ? null : "*Required"}
               </FormHelperText>
             </FormControl>
             {error && (
@@ -175,8 +169,6 @@ const LogIn = () => {
             >
               <span>Log In</span>
             </LoadingButton>
-
-            
 
             <Grid container>
               <Grid item xs>

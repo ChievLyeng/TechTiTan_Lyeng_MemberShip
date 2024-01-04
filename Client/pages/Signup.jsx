@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
@@ -56,9 +57,6 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await signup(username, email, password, passwordConfirm);
-    console.log(username, email, password, passwordConfirm);
-    console.log("Error", error);
-    console.log("single Error", singleError);
   };
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
@@ -88,8 +86,8 @@ const SignUp = () => {
           <Avatar
             sx={{
               m: 1,
-              width: "100px",
-              height: "100px",
+              width: "80px",
+              height: "80px",
               bgcolor: "primary.main",
             }}
           ></Avatar>
@@ -106,7 +104,7 @@ const SignUp = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12}>
                 <TextField
-                  error={Boolean(error && !username)}
+                  error={Boolean(singleError?.userName && !username)}
                   autoComplete="given-name"
                   name="userName"
                   required
@@ -116,10 +114,10 @@ const SignUp = () => {
                   autoFocus
                   onChange={(e) => setUserName(e.target.value)}
                 />
-                {singleError?.username && (
+                {!username && singleError?.userName && (
                   <Alert severity="error" sx={{ marginTop: "8px" }}>
                     {" "}
-                    {singleError?.username?.message}{" "}
+                    {singleError?.userName?.message}{" "}
                   </Alert>
                 )}
               </Grid>
@@ -149,6 +147,7 @@ const SignUp = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl
+                  error={singleError?.password}
                   fullWidth
                   variant="outlined"
                   sx={{
@@ -189,12 +188,6 @@ const SignUp = () => {
                   <FormHelperText id="outlined-adornment-password-helper-text">
                     *Required
                   </FormHelperText>
-                  {/* {singleError?.password?.message && (
-                    <Alert severity="error">
-                      {" "}
-                      {singleError?.password?.message}{" "}
-                    </Alert>
-                  )} */}
                   {singleError?.password && (
                     <Alert severity="error" sx={{ marginTop: "8px" }}>
                       {" "}
@@ -205,6 +198,7 @@ const SignUp = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl
+                  error={singleError?.passwordConfirm}
                   fullWidth
                   variant="outlined"
                   sx={{
@@ -254,14 +248,15 @@ const SignUp = () => {
                 </FormControl>
               </Grid>
             </Grid>
-            <Button
+            <LoadingButton
+              sx={{ mt: 3, mb: 2 }}
+              loading={isLoading}
+              variant="contained"
               type="submit"
               fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
-            </Button>
+              <span>Sign up</span>
+            </LoadingButton>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">

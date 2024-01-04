@@ -26,9 +26,6 @@ export const useSignup = () => {
       );
 
       if (response) {
-        // Request was successful
-        // localStorage.setItem("user", JSON.stringify(response.data));
-        // dispatch({ type: "LOGIN", payload: response.data });
         navigate("/checkemail");
       }
     } catch (err) {

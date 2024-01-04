@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -23,13 +23,11 @@ import AlertTitle from "@mui/material/AlertTitle";
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [shownewPassword, setShowNewPassword] = useState(false);
   const [showconPassword, setShowConPassword] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-  const { resetpassword, isLoading, succes, error } = useResetPassword();
-  const navigate = useNavigate();
+  const { resetpassword, isLoading, succes, error, singleError } =
+    useResetPassword();
   const { token } = useParams();
 
   const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
@@ -44,18 +42,14 @@ const ResetPassword = () => {
     event.preventDefault();
   };
 
-  const handleInputChange = () => {
-    setIsTyping(true);
-    setErrorMessage(""); // Clear the error message
-  };
-
   const handleResetpasword = async (e) => {
     e.preventDefault();
     await resetpassword(password, passwordConfirm, token);
+    console.log(singleError);
+    console.log(error)
   };
 
   useEffect(() => {
-    console.log(succes);
     if (succes) {
       // Show the success alert
       setShowSuccessAlert(true);
@@ -76,9 +70,6 @@ const ResetPassword = () => {
           <CardContent>
             <Box sx={{ maxWidth: "400px", margin: "auto" }}>
               <Typography
-                // variant="h4"
-                // className="title"
-                // sx={{ margin: "24px", textAlign: "center" }}
                 variant="h4"
                 className="title"
                 sx={{ fontWeight: "bold", marginBottom: "8px" }}
@@ -97,6 +88,7 @@ const ResetPassword = () => {
 
               <form onSubmit={handleResetpasword}>
                 <FormControl
+                  error={singleError?.password && !password}
                   fullWidth
                   variant="outlined"
                   sx={{
@@ -131,16 +123,18 @@ const ResetPassword = () => {
                     label="New Password"
                     value={password}
                     onChange={(e) => {
-                      handleInputChange();
                       setPassword(e.target.value);
                     }}
                   />
                   <FormHelperText id="outlined-adornment-password-helper-text">
-                    *Required
+                    {singleError?.password
+                      ? `${singleError?.password?.message}`
+                      : "*Require"}
                   </FormHelperText>
                 </FormControl>
 
                 <FormControl
+                  error={singleError && !passwordConfirm}
                   fullWidth
                   variant="outlined"
                   sx={{
@@ -175,28 +169,33 @@ const ResetPassword = () => {
                     label="Confirm Password"
                     value={passwordConfirm}
                     onChange={(e) => {
-                      handleInputChange();
                       setPasswordConfirm(e.target.value);
                     }}
                   />
                   <FormHelperText id="outlined-adornment-confirm-password-helper-text">
-                    *Required
+                    {singleError?.passwordConfirm
+                      ? `${singleError?.passwordConfirm?.message}`
+                      : "*Require"}
                   </FormHelperText>
                 </FormControl>
 
-                {/* <Button
-                  sx={{
-                    marginTop: "24px",
-                    // backgroundColor: "#82B440",
-                  }}
-                  fullWidth
-                  type="submit"
-                  variant="contained"
-                  className="mt-2"
-                  //   disabled={isLoading}
-                >
-                  Reset Password
-                </Button> */}
+                {error?.error?.statusCode === 400 && (
+                    <Alert severity="error" sx={{ marginTop: "8px" }}>
+                      {" "}
+                      {error.message}{" "}
+                    </Alert>
+                  )}
+
+                {showSuccessAlert && (
+                  <Alert
+                    severity="success"
+                    onClose={() => setShowSuccessAlert(false)}
+                  >
+                    <AlertTitle>Success</AlertTitle>
+                    Your password has been updated.
+                    <strong>you can login now!</strong>
+                  </Alert>
+                )}
 
                 <LoadingButton
                   onClick={handleResetpasword}
@@ -215,17 +214,6 @@ const ResetPassword = () => {
                     Back to login
                   </Button>
                 </Link>
-
-                {showSuccessAlert && (
-                  <Alert
-                    severity="success"
-                    onClose={() => setShowSuccessAlert(false)}
-                  >
-                    <AlertTitle>Success</AlertTitle>
-                    Your password has been updated.
-                    <strong>you can login now!</strong>
-                  </Alert>
-                )}
               </form>
             </Box>
           </CardContent>
