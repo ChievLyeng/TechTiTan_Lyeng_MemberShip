@@ -7,14 +7,13 @@ const userSchema = new mongoose.Schema(
     {
         userName: {
             type: String,
-            unique: true,
-            require: [true, 'username is require'],
+            required: [true, 'Username is require.'],
             trim: true,
         },
         email: {
             type: String,
             unique: true,
-            require: [true, 'email is require'],
+            required: [true, 'Email is require.'],
             validate: [validator.isEmail, 'Please provide a valid email'],
             trim: true,
         },
@@ -57,7 +56,7 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            require: [true, 'Password is require.'],
+            required: [true, 'Password is require.'],
             validate: [
                 validator.isStrongPassword,
                 'Password must contain character, number and symbol.',

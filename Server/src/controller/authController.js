@@ -19,7 +19,7 @@ const sendToken = (user, statusCode, res) => {
     res.status(statusCode).json({
         status: 'success',
         token,
-        date: {
+        data: {
             user,
         },
     })
@@ -27,8 +27,7 @@ const sendToken = (user, statusCode, res) => {
 
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, passwordConfirm } = req.body
-    console.log(username, email, password, passwordConfirm)
-    console.log(req.body)
+
     const newUser = await User.create({
         userName: username,
         email,
@@ -80,12 +79,6 @@ const verifyEmail = asyncHandler(async (req, res, next) => {
         return next(new AppError('Invalid Link!!!', 400))
     }
 
-    // await User.updateOne({
-    //     _id:user._id,
-    //     verified:true
-    // })
-
-    // Update user's verified status
     const updateUser = await User.updateOne(
         { _id: user._id },
         { verified: true }
@@ -122,6 +115,12 @@ const Login = asyncHandler(async (req, res, next) => {
 
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401))
+    }
+
+    if (!user.verified) {
+        return next(
+            new AppError('Please verify your email before logging in.', 400)
+        )
     }
 
     sendToken(user, 200, res)
@@ -190,10 +189,18 @@ const restrictTo = (...roles) => {
 }
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
+    const { email } = req.body
+
+    if (!email) {
+        return next(new AppError('Please enter you email!'))
+    }
+
     // 1. get user based on posted email
-    const user = await User.findOne({ email: req.body.email })
+    const user = await User.findOne({ email })
     if (!user) {
-        return next(new AppError('There is no user with email address.', 404))
+        return next(
+            new AppError('There is no user with this email address.', 404)
+        )
     }
 
     // 2. generate the random reset token
@@ -248,7 +255,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
     // 2. If token has not expired, and there is user, set the new password
     if (!user) {
-        return next(new AppError('Token is invalid or has expired', 400))
+        return next(new AppError('Token is invalid or has expired.', 400))
     }
 
     // reset password and delete and save

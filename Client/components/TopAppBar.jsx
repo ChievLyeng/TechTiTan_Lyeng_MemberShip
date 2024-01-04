@@ -12,7 +12,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 const TopAppBar = () => {
   const { logout } = useLogout();
   const { user } = useAuthContext();
-  console.log("user", user);
 
   const handleLogout = () => {
     logout();
