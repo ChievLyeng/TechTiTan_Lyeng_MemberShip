@@ -1,73 +1,110 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForgotPassword } from "../hooks/useForgotPassword";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Box from "@mui/material/Box";
-import { CircularProgress, Snackbar } from "@mui/material";
 
 const ForgotPassword = () => {
-  const navigate = useNavigate();
-  const [success, setSuccess] = useState(false);
-  const { forgotpassword, isLoading, error } = useForgotPassword();
+  // const navigate = useNavigate();
+  const { forgotpassword, isLoading, succes, error } = useForgotPassword();
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [email, setEmail] = useState("");
 
   const handleForgotPassword = async () => {
-    await forgotpassword(email).finally(setSuccess(true));
+    await forgotpassword(email);
   };
+
+  useEffect(() => {
+    if (succes) {
+      // Show the success alert
+      setShowSuccessAlert(true);
+
+      // Automatically hide the success alert after 5 seconds (adjust as needed)
+      const timer = setTimeout(() => {
+        setShowSuccessAlert(false);
+      }, 5000);
+
+      // Clear the timer when the component unmounts or when the alert is closed
+      return () => clearTimeout(timer);
+    }
+  }, [succes]);
 
   return (
     <Container>
-      <Box sx={{ padding: "24px", maxWidth: "400px", margin: "auto" }}>
-        <Typography variant="h4" className="title" sx={{ margin: "24px" }}>
-          Forgot Password
-        </Typography>
-        <TextField
-          fullWidth
-          label="Email address"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          helperText="Enter your email address"
-          margin="normal"
-          variant="outlined"
-        />
-        <Button
-          type="button"
-          variant="contained"
-          onClick={handleForgotPassword}
-          // disabled={isLoading}
-          fullWidth
-          sx={{ backgroundColor: "#82B440", margin: "24px 0" }}
-        >
-          Send Reset Link
+      <Card sx={{ minWidth: 275, marginTop: "60px" }}>
+        <CardContent>
+          <Box sx={{ maxWidth: "400px", margin: "auto" }}>
+            <Typography
+              variant="h4"
+              className="title"
+              sx={{ fontWeight: "bold", marginBottom: "8px" }}
+            >
+              Forgot Password
+            </Typography>
+            <Typography
+              className="title"
+              color="text.secondary"
+              sx={{ textAlign: "left", paddingBottom: "24px" }}
+            >
+              Please enter your email you use to sign in
+            </Typography>
 
-          {isLoading ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          "Add Product"
-        )}
+            <TextField
+              fullWidth
+              error={error && !email}
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              margin="normal"
+              // helperText={!email ? "Please enter your email" : null}
+              variant="outlined"
+            />
 
-        </Button>
+            {error && (
+              <Alert severity="error" sx={{ marginTop: "8px" }}>
+                {" "}
+                {error?.message}{" "}
+              </Alert>
+            )}
 
-        
-        {success && <Alert
-          severity="success"
-        >
-          <AlertTitle>Success</AlertTitle>
-          Link has sent to your emaill successfully ! —{" "}
-          <strong>check it out!</strong>
-        </Alert>}
+            {showSuccessAlert && (
+              <Alert
+                sx={{ marginTop: "16px" }}
+                severity="success"
+                onClose={() => setShowSuccessAlert(false)}
+              >
+                <AlertTitle>Success</AlertTitle>
+                Reset Link is sent to your email. Please check your email. —{" "}
+                <strong>check it out!</strong>
+              </Alert>
+            )}
 
-        <Snackbar
-          open={success}
-          autoHideDuration={6000}
-          onClose={() => setSuccess(false)}
-          message="Product added successfully!"
-        />
-      </Box>
+            <LoadingButton
+              onClick={handleForgotPassword}
+              loading={isLoading}
+              loadingIndicator="Loading…"
+              size="large"
+              variant="contained"
+              fullWidth
+              sx={{ margin: "24px 0" }}
+            >
+              <span>Request Reset link</span>
+            </LoadingButton>
+            <Link to="/login">
+              <Button variant="text" fullWidth>
+                Back to login
+              </Button>
+            </Link>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
   );
 };
