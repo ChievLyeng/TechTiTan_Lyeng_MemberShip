@@ -1,6 +1,12 @@
 # Membership App
 
 Welcome to the Membership Project, This project is designed to make user authentication easy on website, ensuring a smooth and safe experience for  visitors. Users can log in and out effortlessly and create accounts without any trouble. If they forget their password, they can reset it quickly by providing their email. We'll send them a secure link to reset their password. 
+
+
+# App preview
+
+https://github.com/anb-hq/TechTiTan_Lyeng_MemberShip/assets/126376667/c0c487dd-252a-411d-b54d-fb7ce86cad16
+
 ### Tech stack
 
 - Figma (UI design)
