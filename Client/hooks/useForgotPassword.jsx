@@ -1,15 +1,10 @@
 import { useState } from "react";
-import { useAuthContext } from "./useAuthContext";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const useForgotPassword = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [succes, setSuccess] = useState(false);
-  const { navigate } = useNavigate();
-  //   const { dispatch } = useAuthContext();
-  const PORT = 3000;
 
   const forgotpassword = async (email) => {
     // initail state
@@ -18,7 +13,7 @@ export const useForgotPassword = () => {
     setSuccess(false);
 
     try {
-      const url = `http://localhost:${PORT}/api/v1/users/forgotpassword`;
+      const url = `https://techtitan-lyeng-membership.onrender.com/api/v1/users/forgotpassword`;
 
       const response = await axios.post(
         url,

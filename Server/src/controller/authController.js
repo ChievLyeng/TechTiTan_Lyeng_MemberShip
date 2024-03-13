@@ -41,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
         token: crypto.randomBytes(32).toString('hex'),
     }).save()
 
-    const url = `${process.env.BASE_URL}/api/v1/users/${newUser._id}/verify/${token.token}`
+    const url = `https://techtitan-lyeng-membership.onrender.com/api/v1/users/${newUser._id}/verify/${token.token}`
     const message = `We're happy you signed up for our application. Pleas use this link
      ${url} or click the button to verify your account.`
 
