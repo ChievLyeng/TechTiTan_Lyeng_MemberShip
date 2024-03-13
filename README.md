@@ -3,9 +3,8 @@
 Welcome to the Membership Project, This project is designed to make user authentication easy on website, ensuring a smooth and safe experience for  visitors. Users can log in and out effortlessly and create accounts without any trouble. If they forget their password, they can reset it quickly by providing their email. We'll send them a secure link to reset their password. 
 
 
-# App preview
-
-https://github.com/anb-hq/TechTiTan_Lyeng_MemberShip/assets/126376667/c0c487dd-252a-411d-b54d-fb7ce86cad16
+# Demo App
+[Click this Link](https://tech-ti-tan-lyeng-member-ship-six.vercel.app)
 
 ### Tech stack
 
@@ -35,6 +34,3 @@ https://github.com/anb-hq/TechTiTan_Lyeng_MemberShip/assets/126376667/c0c487dd-2
 
 [Link to git flow method](https://periodic-composer-55b.notion.site/Git-Flow-Method-5577d064d3364f16a14e7e6f76922a8c?pvs=4)
 
-# Backlog
-
-Due to lack of technical on aws this project still not yet finish deployment stage.
