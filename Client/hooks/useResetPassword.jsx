@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useAuthContext } from "./useAuthContext";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const useResetPassword = () => {
@@ -8,9 +6,7 @@ export const useResetPassword = () => {
   const [isLoading, setIsLoading] = useState(null);
   const [succes, setSuccess] = useState(false);
   const [singleError, setSingleError] = useState(null);
-  // const { navigate } = useNavigate();
-  //   const { dispatch } = useAuthContext();
-  const PORT = 3000;
+
 
   const resetpassword = async (password, passwordConfirm, token) => {
     setIsLoading(true);
@@ -19,7 +15,7 @@ export const useResetPassword = () => {
     setSingleError(null);
 
     try {
-      const url = `http://localhost:${PORT}/api/v1/users/resetPassword/${token}`;
+      const url = `https://techtitan-lyeng-membership.onrender.com/api/v1/users/resetPassword/${token}`;
       console.log("url", url);
 
       const response = await axios.patch(

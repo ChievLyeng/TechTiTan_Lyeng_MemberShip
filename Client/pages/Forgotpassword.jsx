@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { TextField, Button, Typography } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForgotPassword } from "../hooks/useForgotPassword";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
