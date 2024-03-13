@@ -13,7 +13,7 @@ const app = express();
 
 // for sending cookie to frontend
 const corsConfig = {
-    origin: process.env.CLIENT_URL,
+    origin: `https://tech-ti-tan-lyeng-member-ship-six.vercel.app`,
     methods: "GET, POST, PUT, PATCH, DELETE, HEAD",
     credentials: true,
   };
