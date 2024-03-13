@@ -22,8 +22,6 @@ export const useForgotPassword = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.status);
-        console.log("succes");
         setIsLoading(false);
         setSuccess(true);
       }

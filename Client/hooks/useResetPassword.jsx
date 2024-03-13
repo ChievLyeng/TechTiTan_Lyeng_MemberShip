@@ -16,7 +16,6 @@ export const useResetPassword = () => {
 
     try {
       const url = `https://techtitan-lyeng-membership.onrender.com/api/v1/users/resetPassword/${token}`;
-      console.log("url", url);
 
       const response = await axios.patch(
         url,

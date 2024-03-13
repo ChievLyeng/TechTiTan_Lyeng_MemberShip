@@ -34,9 +34,7 @@ const Homepage = () => {
         },
       });
 
-      console.log(response.data.data.users);
       const userData = response.data?.data?.users || [];
-      console.log(userData);
       setData(userData);
 
       return response.data.data.users;
@@ -48,7 +46,7 @@ const Homepage = () => {
   useEffect(() => {
     getUser();
   }, []);
-  console.log("dataaaa", data);
+
 
   return (
     <Layout>
