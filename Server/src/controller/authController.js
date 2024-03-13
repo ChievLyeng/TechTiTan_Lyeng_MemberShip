@@ -90,7 +90,7 @@ const verifyEmail = asyncHandler(async (req, res, next) => {
 
     if (updateUser) {
         res.redirect(
-            `http://localhost:5173/users/${req.params.id}/verify/${req.params.token}`
+            `https://tech-ti-tan-lyeng-member-ship-six.vercel.app/users/${req.params.id}/verify/${req.params.token}`
         )
     }
 
@@ -208,7 +208,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
     // 3. send it to user's email
-    const resetURL = `${process.env.CLIENT_URL}/resetpassword/${resetToken}`
+    const resetURL = `https://tech-ti-tan-lyeng-member-ship-six.vercel.app/resetpassword/${resetToken}`
 
     const message = `Forgot your passowrd? Submit a reset request with your new password and 
     passwordConfirm to: ${resetURL}. \n If you didn't forget your passowrd,
